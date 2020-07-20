@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.com/Kyeza/url_shortener.svg?branch=master)](https://travis-ci.com/Kyeza/url_shortener)
 
+[![Coverage Status](https://coveralls.io/repos/github/Kyeza/url_shortener/badge.svg?branch=master)](https://coveralls.io/github/Kyeza/url_shortener?branch=master)
+
 # URL Shortener
 
 The goal of this Project is to create a URL shortener web application in the same 
