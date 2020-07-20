@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/Kyeza/url_shortener.svg?branch=master)](https://travis-ci.com/Kyeza/url_shortener)
+
 # URL Shortener
 
 The goal of this Project is to create a URL shortener web application in the same 
