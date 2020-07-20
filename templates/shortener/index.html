@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container" style="color: #ffffff;">
+    <div class="row">
+        <div id="iframe_display" class="col-sm-8" style="height: 400px; display: none;">
+            <div class="card text-white bg-dark mb-3 w-100 h-100">
+                <div class="card-header">Shortened URL Preview</div>
+                <div class="card-body">
+                    <iframe id="iframe_id" name="urlIframe" src="" class="w-100 h-75" title="Shortened URL Preview"
+                    style="border:none;" ></iframe>
+                </div>
+                <div class="d-flex justify-content-center w-100 mb-4" style="color: #000000;font-size: 2rem;">
+                    <a class="lead" id="preview_link" href="#" target="_blank">Or Click Here to preview in new window</a>
+                </div>
+                <div class="d-flex justify-content-end w-100">
+                    <button type="button" id="hide_preview_window" class="btn btn-outline-light mr-3 mb-3">Close</button>
+                </div>
+            </div>
+        </div>
+        <div id="url_shortener_display" class="col-sm-12">
+            <form>
+                <div class="form-group">
+                    <div class="input-group input-group-lg mb-3">
+                        <input  id="full_url_id" type="text" class="form-control" placeholder="Enter Full URL"
+                               aria-label="Enter Full URL" aria-describedby="button-addon2">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-primary" type="button" id="button-addon2">Shorten</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <br><br>
+            <div class="d-flex justify-content-center w-100">
+                <button id="display_link" type="button" class="btn btn-outline-light btn-lg text-center" style="display: none;">
+                    Preview Short Url<br>
+                    <a id="short_url_id" href="#" target="urlIframe"></a>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+    <script>
+        $(document).ready(function() {
+
+            let fullURL = "";
+            let shortURL = "";
+
+            $('#button-addon2').on('click', function () {
+                let urlTextBox = $('#full_url_id');
+                if (!urlTextBox.val()) {
+                    alert("You can\'t shorten an empty URL");
+                } else {
+                    let createShortUrlApi = "/api/short_urls/";
+                    let data = {
+                        'full_url': urlTextBox.val()
+                    };
+                    $.post(createShortUrlApi, data, function (response) {
+                        console.log(response)
+                        let host = window.location.protocol + window.location.host + "/";
+                        shortURL = response.shortened_url;
+                        fullURL = response.full_url;
+                        $('#display_link').css("display", "block");
+                        $('#short_url_id').text(host + shortURL);
+                        $('#short_url_id').attr('href',shortURL);
+                    });
+                }
+            });
+
+            $('#short_url_id').on('click', function() {
+                $('#display_link').hide()
+                $('#short_url_id').text('');
+                $('#short_url_id').attr('href','#');
+                $('#url_shortener_display').removeClass('col-sm-12');
+                $('#url_shortener_display').addClass('col-sm-4');
+                if (fullURL && shortURL) {
+                    $('#preview_link').attr('href',shortURL);
+                    $('#iframe_id').attr('src',fullURL);
+                }
+                $('#iframe_display').show();
+            });
+
+            $('#hide_preview_window').on('click', function() {
+                $('#url_shortener_display').removeClass('col-sm-4');
+                $('#url_shortener_display').addClass('col-sm-12');
+                $('#iframe_display').attr('src',"");
+                $('#iframe_display').hide();
+                $('#preview_link').attr('href',"");
+            });
+        });
+    </script>
+{% endblock %}
